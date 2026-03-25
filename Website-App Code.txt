@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SharpLine — Stay Sharp. Win More.</title>
+<meta name="description" content="SharpLine delivers the top 3 data-driven bets of the day across NBA, NCAAB, and NHL."/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#000;color:#fff;min-height:100vh;}
+a{color:inherit;text-decoration:none;cursor:pointer;}
+nav{background:#000;border-bottom:1px solid #1a1a1a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.nav-wordmark{font-size:18px;font-weight:700;letter-spacing:1px;color:#fff;}
+.nav-wordmark span{color:#FFD700;}
+.nav-links{display:flex;gap:8px;}
+.nav-btn{font-size:11px;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:700;border:none;letter-spacing:1px;}
+.nav-btn-ghost{background:transparent;color:#888;border:1px solid #333;}
+.nav-btn-ghost:hover{color:#fff;border-color:#555;}
+.nav-btn-gold{background:#FFD700;color:#000;}
+.nav-btn-gold:hover{background:#e6c200;}
+.page{display:none;}.page.active{display:block;}
+.hero{padding:72px 24px 56px;text-align:center;max-width:660px;margin:0 auto;}
+.hero-badge{display:inline-block;font-size:10px;letter-spacing:3px;color:#FFD700;border:1px solid #3a3000;background:#1a1500;padding:6px 18px;border-radius:20px;margin-bottom:24px;}
+.hero-title{font-size:48px;font-weight:900;line-height:1.05;margin-bottom:18px;letter-spacing:-1px;}
+.hero-title span{color:#FFD700;}
+.hero-sub{font-size:16px;color:#888;line-height:1.75;margin-bottom:36px;max-width:480px;margin-left:auto;margin-right:auto;}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:56px;}
+.btn-primary{background:#FFD700;color:#000;font-size:13px;font-weight:700;padding:15px 32px;border-radius:8px;border:none;cursor:pointer;letter-spacing:1px;}
+.btn-primary:hover{background:#e6c200;}
+.btn-secondary{background:transparent;color:#fff;font-size:13px;font-weight:700;padding:15px 32px;border-radius:8px;border:1px solid #333;cursor:pointer;letter-spacing:1px;}
+.btn-secondary:hover{border-color:#666;}
+.hero-stats{display:flex;justify-content:center;gap:40px;padding-top:40px;border-top:1px solid #1a1a1a;flex-wrap:wrap;}
+.stat-num{font-size:32px;font-weight:900;color:#FFD700;}
+.stat-label{font-size:10px;letter-spacing:2px;color:#555;margin-top:4px;}
+.hiw{background:#080800;border-top:1px solid #1a1500;border-bottom:1px solid #1a1500;padding:48px 24px;}
+.hiw-inner{max-width:580px;margin:0 auto;text-align:center;}
+.section-eyebrow{font-size:10px;letter-spacing:4px;color:#555;margin-bottom:16px;}
+.hiw-grid{display:flex;justify-content:center;flex-wrap:wrap;margin-top:32px;}
+.hiw-step{flex:1;min-width:150px;padding:20px 16px;text-align:center;}
+.hiw-icon{font-size:28px;margin-bottom:12px;}
+.hiw-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;}
+.hiw-desc{font-size:12px;color:#555;line-height:1.6;}
+.cta-strip{padding:56px 24px;text-align:center;}
+.cta-strip h2{font-size:30px;font-weight:900;margin-bottom:12px;}
+.cta-strip p{font-size:14px;color:#888;margin-bottom:28px;}
+.picks-wrap{padding:20px 24px 56px;max-width:560px;margin:0 auto;}
+.picks-header{text-align:center;margin-bottom:24px;}
+.picks-date{font-size:10px;letter-spacing:3px;color:#555;margin-bottom:6px;}
+.picks-title{font-size:24px;font-weight:900;}
+.sport-tabs{display:flex;background:#111;border-radius:8px;padding:4px;gap:4px;margin-bottom:20px;}
+.stab{flex:1;padding:10px 4px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;color:#555;cursor:pointer;border-radius:6px;transition:all 0.15s;}
+.stab.active{background:#FFD700;color:#000;}
+.free-tag{display:inline-block;font-size:9px;letter-spacing:2px;color:#FFD700;border:1px solid #3a3000;background:#1a1500;padding:3px 10px;border-radius:10px;margin-bottom:14px;}
+.pick-card{border-radius:10px;margin-bottom:10px;padding:15px 16px;border:1px solid #1e1e1e;background:#0d0d0d;position:relative;overflow:hidden;cursor:pointer;}
+.pick-card.expanded{background:#111;}
+.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.badge{font-size:9px;letter-spacing:1px;font-weight:700;color:#000;padding:3px 10px;border-radius:20px;}
+.odds{font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;color:#000;}
+.game{font-size:11px;color:#666;margin-bottom:5px;}
+.pick-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:10px;}
+.bar-bg{background:#1e1e1e;border-radius:3px;height:4px;margin-bottom:5px;}
+.bar-fill{height:4px;border-radius:3px;}
+.conf-row{display:flex;justify-content:space-between;font-size:10px;color:#555;}
+.analysis{margin-top:12px;padding:10px 12px;background:#080808;border-radius:8px;font-size:12px;color:#999;line-height:1.65;border-left:2px solid;}
+.tap-hint{text-align:right;font-size:10px;color:#333;margin-top:8px;}
+.lock-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-radius:10px;cursor:pointer;}
+.lock-icon{font-size:24px;}.lock-text{font-size:11px;letter-spacing:2px;color:#FFD700;font-weight:700;}.lock-sub{font-size:10px;color:#888;}
+.upsell-box{background:#0f0d00;border:1px solid #3a3000;border-radius:10px;padding:18px;text-align:center;margin-top:8px;}
+.upsell-title{font-size:13px;font-weight:700;color:#FFD700;margin-bottom:6px;}
+.upsell-sub{font-size:11px;color:#888;margin-bottom:14px;}
+.upsell-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.pricing-wrap{padding:56px 24px;max-width:660px;margin:0 auto;}
+.pricing-header{text-align:center;margin-bottom:40px;}
+.pricing-header h2{font-size:32px;font-weight:900;margin-bottom:10px;}
+.pricing-header p{font-size:14px;color:#888;}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:32px;}
+.plan{background:#0d0d0d;border:1px solid #222;border-radius:14px;padding:26px 20px;display:flex;flex-direction:column;gap:14px;}
+.plan.featured{border:2px solid #FFD700;background:#0a0900;}
+.plan-featured-badge{font-size:9px;letter-spacing:2px;font-weight:700;color:#000;background:#FFD700;padding:4px 12px;border-radius:20px;display:inline-block;align-self:flex-start;}
+.plan-name{font-size:17px;font-weight:700;}
+.plan-price{font-size:34px;font-weight:900;color:#FFD700;line-height:1;}
+.plan-price-sub{font-size:12px;color:#555;margin-top:4px;}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:9px;flex:1;}
+.plan-features li{font-size:12px;color:#888;display:flex;align-items:center;gap:7px;}
+.plan-features li.on{color:#ccc;}
+.chk{color:#FFD700;font-weight:700;}.crs{color:#2a2a2a;}
+.plan-btn{padding:13px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;border:none;text-align:center;width:100%;}
+.plan-btn-gold{background:#FFD700;color:#000;}.plan-btn-gold:hover{background:#e6c200;}
+.plan-btn-outline{background:transparent;color:#666;border:1px solid #333;}.plan-btn-outline:hover{border-color:#555;color:#fff;}
+.disclaimer{text-align:center;font-size:11px;color:#444;margin-top:24px;line-height:1.6;}
+.faq-wrap{padding:48px 24px 64px;max-width:600px;margin:0 auto;}
+.faq-header{text-align:center;margin-bottom:36px;}
+.faq-header h2{font-size:28px;font-weight:900;}
+.faq-item{border-bottom:1px solid #1a1a1a;padding:18px 0;cursor:pointer;}
+.faq-q{font-size:14px;font-weight:700;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.faq-toggle{color:#FFD700;font-size:18px;flex-shrink:0;}
+.faq-a{font-size:13px;color:#888;line-height:1.7;margin-top:12px;display:none;}
+.faq-a.open{display:block;}
+footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
+.footer-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;}
+.footer-links{display:flex;justify-content:center;gap:20px;margin-bottom:14px;}
+.footer-links a{font-size:11px;color:#555;}.footer-links a:hover{color:#888;}
+.footer-copy{font-size:10px;color:#333;line-height:1.7;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <svg width="30" height="30" viewBox="0 0 72 72" fill="none">
+      <rect width="72" height="72" rx="16" fill="#FFD700"/>
+      <path d="M29 8 L43 8 L41 22 Q40 28 36 30 Q32 28 31 22 Z" fill="#000"/>
+      <path d="M29 10 Q22 10 22 16 Q22 22 29 23" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M43 10 Q50 10 50 16 Q50 22 43 23" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round"/>
+      <rect x="34" y="30" width="4" height="6" fill="#000"/>
+      <rect x="29" y="36" width="14" height="3" rx="1.5" fill="#000"/>
+      <rect x="31" y="39" width="10" height="2" rx="1" fill="#000"/>
+      <rect x="7" y="46" width="15" height="18" rx="2" fill="#000"/>
+      <rect x="28" y="38" width="16" height="26" rx="2" fill="#000"/>
+      <rect x="50" y="42" width="15" height="22" rx="2" fill="#000"/>
+      <text x="14.5" y="58" text-anchor="middle" font-size="9" font-weight="900" fill="#FFD700" font-family="Arial">2</text>
+      <text x="36" y="52" text-anchor="middle" font-size="9" font-weight="900" fill="#FFD700" font-family="Arial">1</text>
+      <text x="57.5" y="56" text-anchor="middle" font-size="9" font-weight="900" fill="#FFD700" font-family="Arial">3</text>
+    </svg>
+    <span class="nav-wordmark">Sharp<span>Line</span></span>
+  </div>
+  <div class="nav-links">
+    <button class="nav-btn nav-btn-ghost" onclick="showPage('picks')">Picks</button>
+    <button class="nav-btn nav-btn-ghost" onclick="showPage('pricing')">Pricing</button>
+    <button class="nav-btn nav-btn-gold" onclick="showPage('pricing')">Go Pro</button>
+  </div>
+</nav>
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-badge">AI-POWERED DAILY PICKS</div>
+    <h1 class="hero-title">Your Edge.<br/>Every <span>Single</span> Day.</h1>
+    <p class="hero-sub">SharpLine delivers the top 3 data-driven bets of the day across NBA, NCAAB, and NHL — ranked, analyzed, and ready before tip-off.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('picks')">See Today's Picks</button>
+      <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">68%</div><div class="stat-label">WIN RATE</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">PICKS DAILY</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">SPORTS</div></div>
+      <div class="stat"><div class="stat-num">$9.99</div><div class="stat-label">PER MONTH</div></div>
+    </div>
+  </div>
+  <div class="hiw"><div class="hiw-inner">
+    <div class="section-eyebrow">HOW IT WORKS</div>
+    <h2 style="font-size:26px;font-weight:900;">Smart picks in seconds.</h2>
+    <div class="hiw-grid">
+      <div class="hiw-step"><div class="hiw-icon">📊</div><div class="hiw-title">We Analyze</div><div class="hiw-desc">Live odds, stats and win probabilities processed every single day</div></div>
+      <div class="hiw-step"><div class="hiw-icon">🏆</div><div class="hiw-title">We Rank</div><div class="hiw-desc">Top 3 picks ranked by confidence score and betting value</div></div>
+      <div class="hiw-step"><div class="hiw-icon">💰</div><div class="hiw-title">You Win</div><div class="hiw-desc">Place your bets with confidence and a real data-driven edge</div></div>
+    </div>
+  </div></div>
+  <div class="cta-strip">
+    <div class="section-eyebrow">GET STARTED TODAY</div>
+    <h2>Start free. Upgrade anytime.</h2>
+    <p>Get your first pick free every day — no credit card required.</p>
+    <button class="btn-primary" onclick="showPage('picks')">See Today's Free Pick</button>
+  </div>
+</div>
+<div class="page" id="page-picks">
+  <div class="picks-wrap">
+    <div class="picks-header">
+      <div class="picks-date" id="picks-date-label"></div>
+      <div class="picks-title">Today's Top 3 Picks</div>
+    </div>
+    <div class="sport-tabs">
+      <div class="stab active" onclick="switchSport('nba',this)">🏀 NBA</div>
+      <div class="stab" onclick="switchSport('ncaamb',this)">🎓 NCAAB</div>
+      <div class="stab" onclick="switchSport('nhl',this)">🏒 NHL</div>
+    </div>
+    <div class="free-tag">✓ FREE PICK — No account needed</div>
+    <div id="picks-list"></div>
+    <div class="upsell-box">
+      <div class="upsell-title">🔒 Unlock Picks 2 &amp; 3</div>
+      <div class="upsell-sub">Get full analysis + all 3 ranked picks with a Pro plan or daily pass</div>
+      <div class="upsell-btns">
+        <button class="btn-primary" style="font-size:11px;padding:10px 18px;" onclick="showPage('pricing')">Go Pro — $9.99/mo</button>
+        <button class="btn-secondary" style="font-size:11px;padding:10px 18px;" onclick="showPage('pricing')">Daily Pass — $2.99</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page" id="page-pricing">
+  <div class="pricing-wrap">
+    <div class="pricing-header"><h2>Simple, Honest Pricing</h2><p>No hidden fees. Cancel anytime. Start completely free.</p></div>
+    <div class="pricing-grid">
+      <div class="plan">
+        <div class="plan-name">Free</div><div class="plan-price">$0</div><div class="plan-price-sub">forever</div>
+        <ul class="plan-features">
+          <li class="on"><span class="chk">✓</span> 1 pick per day</li>
+          <li class="on"><span class="chk">✓</span> NBA, NCAAB, NHL</li>
+          <li><span class="crs">✗</span> Full analysis</li>
+          <li><span class="crs">✗</span> Picks 2 &amp; 3</li>
+          <li><span class="crs">✗</span> Confidence scores</li>
+        </ul>
+        <button class="plan-btn plan-btn-outline" onclick="showPage('picks')">Start Free</button>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Daily Pass</div><div class="plan-price">$2.99</div><div class="plan-price-sub">per day · expires midnight</div>
+        <ul class="plan-features">
+          <li class="on"><span class="chk">✓</span> All 3 picks today</li>
+          <li class="on"><span class="chk">✓</span> Full analysis</li>
+          <li class="on"><span class="chk">✓</span> Confidence scores</li>
+          <li class="on"><span class="chk">✓</span> All 3 sports</li>
+          <li><span class="crs">✗</span> No rollover</li>
+        </ul>
+        <button class="plan-btn plan-btn-outline" onclick="alert('Stripe payments coming soon!')">Buy Today\'s Pass</button>
+      </div>
+      <div class="plan featured">
+        <div class="plan-featured-badge">BEST VALUE</div>
+        <div class="plan-name">Pro</div><div class="plan-price">$9.99</div><div class="plan-price-sub">per month · cancel anytime</div>
+        <ul class="plan-features">
+          <li class="on"><span class="chk">✓</span> All 3 picks daily</li>
+          <li class="on"><span class="chk">✓</span> Full analysis</li>
+          <li class="on"><span class="chk">✓</span> Confidence scores</li>
+          <li class="on"><span class="chk">✓</span> All 3 sports</li>
+          <li class="on"><span class="chk">✓</span> Cancel anytime</li>
+        </ul>
+        <button class="plan-btn plan-btn-gold" onclick="alert('Stripe payments coming soon!')">Start Pro — $9.99/mo</button>
+      </div>
+    </div>
+    <div class="disclaimer">⚠ For entertainment purposes only. Must be 21+. Please gamble responsibly.<br/>SharpLine does not accept wagers or guarantee outcomes.</div>
+  </div>
+  <div class="faq-wrap">
+    <div class="faq-header"><h2>Frequently Asked Questions</h2></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">How are the picks generated?<span class="faq-toggle">+</span></div><div class="faq-a">SharpLine uses real-time game data, live win probabilities, and odds analysis to rank the top 3 bets of the day by confidence score across NBA, NCAAB, and NHL.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">When are picks posted each day?<span class="faq-toggle">+</span></div><div class="faq-a">Picks are updated every morning and refreshed throughout the day as new data and line movements come in.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Can I cancel my Pro subscription?<span class="faq-toggle">+</span></div><div class="faq-a">Yes — cancel anytime with one click. No questions asked, no hidden fees, no hassle.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">What sports do you cover?<span class="faq-toggle">+</span></div><div class="faq-a">Currently NBA, NCAA Men's Basketball, and NHL. NFL, MLB, and soccer are on the roadmap.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Daily Pass vs Pro — what's the difference?<span class="faq-toggle">+</span></div><div class="faq-a">A Daily Pass gives you full access for one day. Pro gives you full access every day for one low monthly price. Bet more than 4 days a month? Pro wins every time.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Is this guaranteed to win?<span class="faq-toggle">+</span></div><div class="faq-a">No pick service can guarantee wins. SharpLine provides data-driven analysis to help you make smarter bets. Always gamble responsibly.</div></div>
+  </div>
+</div>
+<footer>
+  <div class="footer-logo">
+    <svg width="22" height="22" viewBox="0 0 72 72" fill="none"><rect width="72" height="72" rx="16" fill="#FFD700"/><path d="M29 8 L43 8 L41 22 Q40 28 36 30 Q32 28 31 22 Z" fill="#000"/><rect x="7" y="46" width="15" height="18" rx="2" fill="#000"/><rect x="28" y="38" width="16" height="26" rx="2" fill="#000"/><rect x="50" y="42" width="15" height="22" rx="2" fill="#000"/></svg>
+    <span style="font-size:14px;font-weight:700;color:#fff;">Sharp<span style="color:#FFD700;">Line</span></span>
+  </div>
+  <div class="footer-links">
+    <a onclick="showPage('home')">Home</a>
+    <a onclick="showPage('picks')">Picks</a>
+    <a onclick="showPage('pricing')">Pricing</a>
+  </div>
+  <div class="footer-copy">© 2026 SharpLine · SharpLineApp.com<br/>For entertainment purposes only. Must be 21+. Please gamble responsibly.</div>
+</footer>
+<script>
+const picksData={nba:[{badge:"🥇 BEST BET",color:"#FFD700",game:"🏀 NBA · Charlotte Hornets vs Sacramento Kings",name:"Charlotte Hornets ML",odds:"-650",conf:95,locked:false,analysis:"CHA is 93% favored at home. Sacramento is bottom-5 in road record this month. Lock of the day."},{badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🏀 NBA · Cleveland Cavaliers vs Orlando Magic",name:"Cleveland Cavaliers -6.5",odds:"-110",conf:80,locked:true,analysis:""},{badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏀 NBA · Denver Nuggets @ Phoenix Suns",name:"Denver Nuggets ML",odds:"+110",conf:69,locked:true,analysis:""}],ncaamb:[{badge:"🥇 BEST BET",color:"#FFD700",game:"🎓 NCAAB · Auburn Tigers vs Nevada Wolf Pack",name:"Auburn Tigers -14.5",odds:"-112",conf:91,locked:false,analysis:"Auburn is a powerhouse matchup vs a mid-major Nevada squad. Tigers have covered in 8 of last 10 home games."},{badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🎓 NCAAB · Tulsa vs Wichita State",name:"Over 138.5",odds:"-108",conf:77,locked:true,analysis:""},{badge:"🥉 VALUE BET",color:"#CD7F32",game:"🎓 NCAAB · New Mexico vs Saint Joseph's",name:"New Mexico ML",odds:"+105",conf:66,locked:true,analysis:""}],nhl:[{badge:"🥇 BEST BET",color:"#FFD700",game:"🏒 NHL · Boston Bruins vs Toronto Maple Leafs",name:"Boston Bruins ML",odds:"-175",conf:63,locked:false,analysis:"BOS is 63% favored at home. Bruins have won 5 of last 7 vs TOR and are surging."},{badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🏒 NHL · Colorado Avalanche @ Pittsburgh",name:"Colorado Avalanche ML",odds:"+115",conf:61,locked:true,analysis:""},{badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏒 NHL · Tampa Bay Lightning vs Minnesota Wild",name:"Tampa Bay Lightning ML",odds:"-145",conf:59,locked:true,analysis:""}]};
+let currentSport='nba',expanded=null;
+function getDateLabel(){return new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();}
+function renderPicks(){const el=document.getElementById('picks-date-label');if(el)el.textContent=getDateLabel();const list=document.getElementById('picks-list');if(!list)return;list.innerHTML=picksData[currentSport].map((p,i)=>`<div class="pick-card${expanded===i?' expanded':''}" style="border-left:3px solid ${p.color};" onclick="toggleCard(${i})"><div class="card-top"><span class="badge" style="background:${p.color};">${p.badge}</span><span class="odds" style="background:${p.color};">${p.odds}</span></div><div class="game">${p.game}</div><div class="pick-name">${p.name}</div><div class="bar-bg"><div class="bar-fill" style="width:${p.locked?25:p.conf}%;background:${p.color};"></div></div><div class="conf-row"><span>CONFIDENCE</span><span style="color:${p.color};font-weight:700;">${p.locked?'??%':p.conf+'%'}</span></div>${(!p.locked&&expanded===i)?`<div class="analysis" style="border-left-color:${p.color};">💡 ${p.analysis}</div>`:''} ${!p.locked?`<div class="tap-hint">${expanded===i?'▲ tap to collapse':'▼ tap for analysis'}</div>`:''} ${p.locked?`<div class="lock-overlay" onclick="event.stopPropagation();showPage('pricing')"><div class="lock-icon">🔒</div><div class="lock-text">PRO PICK</div><div class="lock-sub">Tap to unlock</div></div>`:''}</div>`).join('');}
+function toggleCard(i){expanded=expanded===i?null:i;renderPicks();}
+function switchSport(sport,el){currentSport=sport;expanded=null;document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderPicks();}
+function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');window.scrollTo(0,0);if(name==='picks')renderPicks();}
+function toggleFaq(el){const a=el.querySelector('.faq-a');const t=el.querySelector('.faq-toggle');const open=a.classList.toggle('open');t.textContent=open?'−':'+';}
+renderPicks();
+</script>
+</body>
+</html>
