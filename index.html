@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SharpLine — Stay Sharp. Win More.</title>
-<meta name="description" content="SharpLine delivers the top 3 data-driven bets of the day across NBA, NCAAB, and NHL."/>
+<meta name="description" content="SharpLine delivers the top 3 data-driven bets of the day across NBA, NCAAB, NHL and MLB."/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -50,10 +50,10 @@ nav{background:#000;border-bottom:1px solid #1a1a1a;padding:14px 24px;display:fl
 .picks-date{font-size:10px;letter-spacing:3px;color:#555;margin-bottom:6px;}
 .picks-title{font-size:24px;font-weight:900;}
 .sport-tabs{display:flex;background:#111;border-radius:8px;padding:4px;gap:4px;margin-bottom:20px;}
-.stab{flex:1;padding:10px 4px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;color:#555;cursor:pointer;border-radius:6px;transition:all 0.15s;}
+.stab{flex:1;padding:10px 4px;text-align:center;font-size:10px;font-weight:700;letter-spacing:1px;color:#555;cursor:pointer;border-radius:6px;transition:all 0.15s;}
 .stab.active{background:#FFD700;color:#000;}
 .free-tag{display:inline-block;font-size:9px;letter-spacing:2px;color:#FFD700;border:1px solid #3a3000;background:#1a1500;padding:3px 10px;border-radius:10px;margin-bottom:14px;}
-.pick-card{border-radius:10px;margin-bottom:10px;padding:15px 16px;border:1px solid #1e1e1e;background:#0d0d0d;position:relative;overflow:hidden;cursor:pointer;}
+.pick-card{border-radius:10px;margin-bottom:10px;padding:15px 16px;border:1px solid #1e1e1e;background:#0d0d0d;cursor:pointer;}
 .pick-card.expanded{background:#111;}
 .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
 .badge{font-size:9px;letter-spacing:1px;font-weight:700;color:#000;padding:3px 10px;border-radius:20px;}
@@ -65,8 +65,12 @@ nav{background:#000;border-bottom:1px solid #1a1a1a;padding:14px 24px;display:fl
 .conf-row{display:flex;justify-content:space-between;font-size:10px;color:#555;}
 .analysis{margin-top:12px;padding:10px 12px;background:#080808;border-radius:8px;font-size:12px;color:#999;line-height:1.65;border-left:2px solid;}
 .tap-hint{text-align:right;font-size:10px;color:#333;margin-top:8px;}
-.lock-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-radius:10px;cursor:pointer;}
-.lock-icon{font-size:24px;}.lock-text{font-size:11px;letter-spacing:2px;color:#FFD700;font-weight:700;}.lock-sub{font-size:10px;color:#888;}
+.locked-card{border-radius:10px;margin-bottom:10px;background:#0a0a0a;border:1px solid #1a1a1a;padding:20px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.locked-left{display:flex;align-items:center;gap:12px;}
+.locked-badge{font-size:9px;letter-spacing:1px;font-weight:700;color:#000;padding:3px 10px;border-radius:20px;}
+.locked-label{font-size:13px;font-weight:700;color:#333;}
+.locked-sub{font-size:10px;color:#2a2a2a;margin-top:2px;}
+.locked-right{font-size:20px;}
 .upsell-box{background:#0f0d00;border:1px solid #3a3000;border-radius:10px;padding:18px;text-align:center;margin-top:8px;}
 .upsell-title{font-size:13px;font-weight:700;color:#FFD700;margin-bottom:6px;}
 .upsell-sub{font-size:11px;color:#888;margin-bottom:14px;}
@@ -156,7 +160,7 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
     </svg>
     <span class="nav-wordmark">Sharp<span>Line</span></span>
   </div>
-  <div class="nav-links" id="nav-links">
+  <div class="nav-links">
     <button class="nav-btn nav-btn-ghost" onclick="showPage('picks')">Picks</button>
     <button class="nav-btn nav-btn-ghost" onclick="showPage('pricing')">Pricing</button>
     <button class="nav-btn nav-btn-ghost" id="nav-account-btn" style="display:none;" onclick="showPage('account')">My Account</button>
@@ -170,7 +174,7 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
   <div class="hero">
     <div class="hero-badge">AI-POWERED DAILY PICKS</div>
     <h1 class="hero-title">Your Edge.<br/>Every <span>Single</span> Day.</h1>
-    <p class="hero-sub">SharpLine delivers the top 3 data-driven bets of the day across NBA, NCAAB, and NHL — ranked, analyzed, and ready before tip-off.</p>
+    <p class="hero-sub">SharpLine delivers the top 3 data-driven bets of the day across NBA, NCAAB, NHL and MLB — ranked, analyzed, and ready before tip-off.</p>
     <div class="hero-btns">
       <button class="btn-primary" onclick="showPage('picks')">See Today's Picks</button>
       <button class="btn-secondary" onclick="showPage('pricing')">View Pricing</button>
@@ -178,7 +182,7 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
     <div class="hero-stats">
       <div class="stat"><div class="stat-num">68%</div><div class="stat-label">WIN RATE</div></div>
       <div class="stat"><div class="stat-num">3</div><div class="stat-label">PICKS DAILY</div></div>
-      <div class="stat"><div class="stat-num">3</div><div class="stat-label">SPORTS</div></div>
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">SPORTS</div></div>
       <div class="stat"><div class="stat-num">$9.99</div><div class="stat-label">PER MONTH</div></div>
     </div>
   </div>
@@ -210,12 +214,13 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
       <div class="stab active" onclick="switchSport('nba',this)">🏀 NBA</div>
       <div class="stab" onclick="switchSport('ncaamb',this)">🎓 NCAAB</div>
       <div class="stab" onclick="switchSport('nhl',this)">🏒 NHL</div>
+      <div class="stab" onclick="switchSport('mlb',this)">⚾ MLB</div>
     </div>
     <div class="free-tag" id="free-tag-label">✓ FREE PICK — Create account to unlock more</div>
     <div id="picks-list"></div>
     <div class="upsell-box" id="upsell-box">
-      <div class="upsell-title">🔒 Unlock All 3 Picks</div>
-      <div class="upsell-sub">Get full analysis + all 3 ranked picks with a Pro plan or daily pass</div>
+      <div class="upsell-title">🔒 Unlock Picks 1 &amp; 2</div>
+      <div class="upsell-sub">The best picks of the day are waiting — upgrade to Pro or grab a daily pass</div>
       <div class="upsell-btns">
         <button class="btn-primary" style="font-size:11px;padding:10px 18px;" onclick="showPage('pricing')">Go Pro — $9.99/mo</button>
         <button class="btn-secondary" style="font-size:11px;padding:10px 18px;" onclick="showPage('pricing')">Daily Pass — $2.99</button>
@@ -232,10 +237,10 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
       <div class="plan">
         <div class="plan-name">Free</div><div class="plan-price">$0</div><div class="plan-price-sub">forever</div>
         <ul class="plan-features">
-          <li class="on"><span class="chk">✓</span> 1 pick per day</li>
-          <li class="on"><span class="chk">✓</span> NBA, NCAAB, NHL</li>
+          <li class="on"><span class="chk">✓</span> Pick #3 daily</li>
+          <li class="on"><span class="chk">✓</span> NBA, NCAAB, NHL, MLB</li>
+          <li><span class="crs">✗</span> Picks #1 &amp; #2</li>
           <li><span class="crs">✗</span> Full analysis</li>
-          <li><span class="crs">✗</span> Picks 2 &amp; 3</li>
           <li><span class="crs">✗</span> Confidence scores</li>
         </ul>
         <button class="plan-btn plan-btn-outline" onclick="showPage('signup')">Start Free</button>
@@ -246,7 +251,7 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
           <li class="on"><span class="chk">✓</span> All 3 picks today</li>
           <li class="on"><span class="chk">✓</span> Full analysis</li>
           <li class="on"><span class="chk">✓</span> Confidence scores</li>
-          <li class="on"><span class="chk">✓</span> All 3 sports</li>
+          <li class="on"><span class="chk">✓</span> All 4 sports</li>
           <li><span class="crs">✗</span> No rollover</li>
         </ul>
         <button class="plan-btn plan-btn-outline" onclick="showPage('signup')">Buy Today's Pass</button>
@@ -258,7 +263,7 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
           <li class="on"><span class="chk">✓</span> All 3 picks daily</li>
           <li class="on"><span class="chk">✓</span> Full analysis</li>
           <li class="on"><span class="chk">✓</span> Confidence scores</li>
-          <li class="on"><span class="chk">✓</span> All 3 sports</li>
+          <li class="on"><span class="chk">✓</span> All 4 sports</li>
           <li class="on"><span class="chk">✓</span> Cancel anytime</li>
         </ul>
         <button class="plan-btn plan-btn-gold" onclick="showPage('signup')">Start Pro — $9.99/mo</button>
@@ -268,11 +273,11 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
   </div>
   <div class="faq-wrap">
     <div class="faq-header"><h2>Frequently Asked Questions</h2></div>
-    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">How are the picks generated?<span class="faq-toggle">+</span></div><div class="faq-a">SharpLine uses real-time game data, live win probabilities, and odds analysis to rank the top 3 bets of the day by confidence score across NBA, NCAAB, and NHL.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">How are the picks generated?<span class="faq-toggle">+</span></div><div class="faq-a">SharpLine uses real-time game data, live win probabilities, and odds analysis to rank the top 3 bets of the day by confidence score across NBA, NCAAB, NHL and MLB.</div></div>
     <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">When are picks posted each day?<span class="faq-toggle">+</span></div><div class="faq-a">Picks are updated every morning and refreshed throughout the day as new data and line movements come in.</div></div>
     <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Can I cancel my Pro subscription?<span class="faq-toggle">+</span></div><div class="faq-a">Yes — cancel anytime with one click. No questions asked, no hidden fees, no hassle.</div></div>
-    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">What sports do you cover?<span class="faq-toggle">+</span></div><div class="faq-a">Currently NBA, NCAA Men's Basketball, and NHL. NFL, MLB, and soccer are on the roadmap.</div></div>
-    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Daily Pass vs Pro — what's the difference?<span class="faq-toggle">+</span></div><div class="faq-a">A Daily Pass gives you full access for one day. Pro gives you full access every day for one low monthly price. Bet more than 4 days a month? Pro wins every time.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">What sports do you cover?<span class="faq-toggle">+</span></div><div class="faq-a">NBA, NCAA Men's Basketball, NHL and MLB. More sports coming soon.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Why is the free pick #3 and not #1?<span class="faq-toggle">+</span></div><div class="faq-a">Pick #3 is our Value Bet — a solid pick with real upside. Picks #1 and #2 are our strongest plays of the day and exclusive to Pro members.</div></div>
     <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Is this guaranteed to win?<span class="faq-toggle">+</span></div><div class="faq-a">No pick service can guarantee wins. SharpLine provides data-driven analysis to help you make smarter bets. Always gamble responsibly.</div></div>
   </div>
 </div>
@@ -328,7 +333,7 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
       <div style="text-align:center;margin-bottom:20px;"><span class="pro-badge-sm" id="account-plan-badge">FREE</span></div>
       <div class="account-plan-row">
         <div><div class="apl-label">CURRENT PLAN</div><div class="apl-value" id="account-plan-name">Free</div></div>
-        <div style="text-align:right;"><div class="apl-label">PICKS ACCESS</div><div class="apl-value" id="account-picks-access">1 per day</div></div>
+        <div style="text-align:right;"><div class="apl-label">PICKS ACCESS</div><div class="apl-value" id="account-picks-access">Pick #3 only</div></div>
       </div>
       <button class="plan-btn plan-btn-gold" style="margin-bottom:12px;" id="account-upgrade-btn" onclick="showPage('pricing')">Upgrade to Pro — $9.99/mo</button>
       <button class="account-btn" onclick="handleSignOut()">Sign Out</button>
@@ -361,32 +366,34 @@ let expanded=null;
 
 const picksData={
   nba:[
-    {badge:"🥇 BEST BET",color:"#FFD700",game:"🏀 NBA · Orlando Magic vs Sacramento Kings",name:"Orlando Magic ML",odds:"-800",conf:91,locked:false,analysis:"ORL is 91% favored at home vs a Sacramento team that just got blown out. Magic are 14-3 at home this stretch. Easiest lock on the board."},
-    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🏀 NBA · Detroit Pistons vs New Orleans Pelicans",name:"Detroit Pistons -5.5",odds:"-115",conf:66,locked:true,analysis:"DET is 66% favored at home. Pistons have won 4 straight and NOP is 2-11 in their last 13 road games."},
-    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏀 NBA · Charlotte Hornets vs New York Knicks",name:"Over 224.5",odds:"-108",conf:52,locked:true,analysis:"Both teams averaging 118+ PPG in last 5. This is a near even matchup that should produce a shootout."}
+    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏀 NBA · Charlotte Hornets vs New York Knicks",name:"Over 224.5",odds:"-108",conf:52,free:true,analysis:"Both teams averaging 118+ PPG in last 5 games. Near even matchup that should produce a high scoring shootout tonight."},
+    {badge:"🥇 BEST BET",color:"#FFD700",game:"🏀 NBA · Orlando Magic vs Sacramento Kings",name:"Orlando Magic ML",odds:"-800",conf:91,free:false,analysis:"ORL is 91% favored at home vs a Sacramento team that just got blown out. Magic are 14-3 at home this stretch."},
+    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🏀 NBA · Detroit Pistons vs New Orleans Pelicans",name:"Detroit Pistons -5.5",odds:"-115",conf:63,free:false,analysis:"DET is 63% favored at home. Pistons have won 4 straight and NOP is 2-11 in their last 13 road games."}
   ],
   ncaamb:[
-    {badge:"🥇 BEST BET",color:"#FFD700",game:"🎓 NCAAB · Auburn Tigers vs Nevada Wolf Pack",name:"Auburn Tigers -14.5",odds:"-112",conf:91,locked:false,analysis:"Auburn is a powerhouse matchup vs a mid-major Nevada squad. Tigers have covered in 8 of last 10 home games."},
-    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🎓 NCAAB · Dayton vs Illinois State",name:"Dayton -8",odds:"-110",conf:74,locked:true,analysis:"Dayton is rolling at home and Illinois State is 1-8 ATS on the road this season."},
-    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🎓 NCAAB · Auburn vs Nevada",name:"Over 151.5",odds:"-105",conf:64,locked:true,analysis:"Both teams pace in the top 20 nationally. Expect a high scoring affair in this one."}
+    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🎓 NCAAB · Auburn vs Nevada",name:"Over 151.5",odds:"-105",conf:64,free:true,analysis:"Both teams pace in the top 20 nationally. Expect a high scoring affair in this SEC vs Mountain West matchup."},
+    {badge:"🥇 BEST BET",color:"#FFD700",game:"🎓 NCAAB · Auburn Tigers vs Nevada Wolf Pack",name:"Auburn Tigers -14.5",odds:"-112",conf:91,free:false,analysis:"Auburn is a powerhouse matchup vs a mid-major Nevada squad. Tigers have covered 8 of last 10 home games."},
+    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🎓 NCAAB · Dayton vs Illinois State",name:"Dayton -8",odds:"-110",conf:74,free:false,analysis:"Dayton is rolling at home and Illinois State is 1-8 ATS on the road this season."}
   ],
   nhl:[
-    {badge:"🥇 BEST BET",color:"#FFD700",game:"🏒 NHL · Florida Panthers vs Seattle Kraken",name:"Florida Panthers ML",odds:"-195",conf:55,locked:false,analysis:"FLA is 55% favored at home. Panthers are the defending champs playing at home against a struggling Seattle squad."},
-    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🏒 NHL · Boston Bruins vs Toronto Maple Leafs",name:"Boston Bruins ML",odds:"-165",conf:63,locked:true,analysis:"BOS 63% favored at home. Bruins have won 5 of last 7 vs TOR in this classic rivalry."},
-    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏒 NHL · Colorado Avalanche @ Pittsburgh",name:"Colorado Avalanche ML",odds:"+115",conf:61,locked:true,analysis:"COL 61% favored even on road. Avalanche have elite road record and Makar is unstoppable."}
+    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏒 NHL · Colorado Avalanche @ Pittsburgh",name:"Colorado Avalanche ML",odds:"+115",conf:61,free:true,analysis:"COL 61% favored even on the road. Avalanche have elite road record and Makar is a game changer on any blue line."},
+    {badge:"🥇 BEST BET",color:"#FFD700",game:"🏒 NHL · Boston Bruins vs Toronto Maple Leafs",name:"Boston Bruins ML",odds:"-165",conf:63,free:false,analysis:"BOS 63% favored at home. Bruins have won 5 of last 7 vs TOR in this classic Atlantic Division rivalry."},
+    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🏒 NHL · Florida Panthers vs Seattle Kraken",name:"Florida Panthers ML",odds:"-195",conf:55,free:false,analysis:"FLA 55% favored at home. Panthers are elite at home and Seattle is struggling badly on the road right now."}
+  ],
+  mlb:[
+    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"⚾ MLB · Milwaukee Brewers vs Chicago White Sox",name:"Milwaukee Brewers ML",odds:"-185",conf:68,free:true,analysis:"MIL has won 3 straight and CWS is one of the worst road teams in baseball this season. Brewers at home is a strong value play."},
+    {badge:"🥇 BEST BET",color:"#FFD700",game:"⚾ MLB · Los Angeles Dodgers vs Arizona Diamondbacks",name:"Los Angeles Dodgers ML",odds:"-220",conf:74,free:false,analysis:"LAD is the class of the NL at home. Arizona has lost 6 of their last 8 road games and Dodger Stadium is a fortress."},
+    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"⚾ MLB · Philadelphia Phillies vs Texas Rangers",name:"Philadelphia Phillies ML",odds:"-145",conf:61,free:false,analysis:"PHI at home has been dominant and Texas is 4-9 in their last 13 road games. Phillies fans make this park incredibly tough to win in."}
   ]
 };
 
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
-  if(session){
-    currentUser=session.user;
-    updateNavForUser();
-  }
+  if(session){currentUser=session.user;updateNavForUser();}
   sb.auth.onAuthStateChange((_,session)=>{
     currentUser=session?session.user:null;
     updateNavForUser();
-    if(currentUser) updateAccountPage();
+    if(currentUser)updateAccountPage();
   });
   renderPicks();
 }
@@ -417,9 +424,9 @@ function updateAccountPage(){
   document.getElementById('account-email').textContent=email;
   document.getElementById('account-plan-badge').textContent=isPro?'⭐ PRO':'FREE';
   document.getElementById('account-plan-name').textContent=isPro?'SharpLine Pro':'Free';
-  document.getElementById('account-picks-access').textContent=isPro?'All 3 daily ✓':'1 per day';
+  document.getElementById('account-picks-access').textContent=isPro?'All 3 daily ✓':'Pick #3 only';
   const upgradeBtn=document.getElementById('account-upgrade-btn');
-  if(isPro) upgradeBtn.style.display='none';
+  if(upgradeBtn)upgradeBtn.style.display=isPro?'none':'block';
 }
 
 async function handleSignup(){
@@ -456,8 +463,8 @@ async function handleSignOut(){
 async function handleForgotPassword(){
   const email=document.getElementById('login-email').value.trim();
   if(!email){const e=document.getElementById('login-error');e.textContent='Enter your email above first.';e.style.display='block';return;}
-  const{error}=await sb.auth.resetPasswordForEmail(email);
-  if(!error) showToast('Password reset email sent!');
+  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://sharplineapp.com'});
+  if(!error)showToast('Password reset email sent!');
 }
 
 function showToast(msg){
@@ -482,21 +489,51 @@ function renderPicks(){
     if(freeTag)freeTag.textContent='⭐ PRO — All picks unlocked';
   } else {
     if(upsell)upsell.style.display='block';
-    if(freeTag)freeTag.textContent=currentUser?'✓ FREE ACCOUNT — Upgrade to unlock all picks':'✓ FREE PICK — Create account to unlock more';
+    if(freeTag)freeTag.textContent=currentUser?'✓ FREE ACCOUNT — Pick #3 is yours free':'✓ FREE PICK — Sign up to unlock more';
   }
-  list.innerHTML=picksData[currentSport].map((p,i)=>{
-    const locked=p.locked&&!isPro;
-    return`<div class="pick-card${expanded===i&&!locked?' expanded':''}" style="border-left:3px solid ${p.color};" onclick="toggleCard(${i})">
-      <div class="card-top"><span class="badge" style="background:${p.color};">${p.badge}</span><span class="odds" style="background:${p.color};">${p.odds}</span></div>
-      <div class="game">${p.game}</div>
-      <div class="pick-name">${p.name}</div>
-      <div class="bar-bg"><div class="bar-fill" style="width:${locked?25:p.conf}%;background:${p.color};"></div></div>
-      <div class="conf-row"><span>CONFIDENCE</span><span style="color:${p.color};font-weight:700;">${locked?'??%':p.conf+'%'}</span></div>
-      ${(!locked&&expanded===i)?`<div class="analysis" style="border-left-color:${p.color};">💡 ${p.analysis}</div>`:''}
-      ${!locked?`<div class="tap-hint">${expanded===i?'▲ tap to collapse':'▼ tap for analysis'}</div>`:''}
-      ${locked?`<div class="lock-overlay" onclick="event.stopPropagation();showPage('pricing')"><div class="lock-icon">🔒</div><div class="lock-text">PRO PICK</div><div class="lock-sub">Tap to unlock</div></div>`:''}
-    </div>`;
-  }).join('');
+
+  const picks=picksData[currentSport];
+  const freePick=picks.find(p=>p.free);
+  const lockedPicks=picks.filter(p=>!p.free);
+
+  let html='';
+
+  if(isPro){
+    const ordered=[picks.find(p=>p.badge.includes('BEST')),picks.find(p=>p.badge.includes('STRONG')),picks.find(p=>p.badge.includes('VALUE'))];
+    ordered.forEach((p,i)=>{
+      html+=buildPickCard(p,i);
+    });
+  } else {
+    html+=buildPickCard(freePick,0);
+    lockedPicks.forEach((p,i)=>{
+      html+=`<div class="locked-card" onclick="showPage('pricing')">
+        <div class="locked-left">
+          <span class="locked-badge" style="background:${p.color};">${p.badge}</span>
+          <div>
+            <div class="locked-label">Pro Pick — Upgrade to unlock</div>
+            <div class="locked-sub">Available with Daily Pass or Pro</div>
+          </div>
+        </div>
+        <div class="locked-right">🔒</div>
+      </div>`;
+    });
+  }
+
+  list.innerHTML=html;
+}
+
+function buildPickCard(p,i){
+  if(!p)return'';
+  const isExpanded=expanded===i;
+  return`<div class="pick-card${isExpanded?' expanded':''}" style="border-left:3px solid ${p.color};" onclick="toggleCard(${i})">
+    <div class="card-top"><span class="badge" style="background:${p.color};">${p.badge}</span><span class="odds" style="background:${p.color};">${p.odds}</span></div>
+    <div class="game">${p.game}</div>
+    <div class="pick-name">${p.name}</div>
+    <div class="bar-bg"><div class="bar-fill" style="width:${p.conf}%;background:${p.color};"></div></div>
+    <div class="conf-row"><span>CONFIDENCE</span><span style="color:${p.color};font-weight:700;">${p.conf}%</span></div>
+    ${isExpanded?`<div class="analysis" style="border-left-color:${p.color};">💡 ${p.analysis}</div>`:''}
+    <div class="tap-hint">${isExpanded?'▲ tap to collapse':'▼ tap for analysis'}</div>
+  </div>`;
 }
 
 function toggleCard(i){expanded=expanded===i?null:i;renderPicks();}
