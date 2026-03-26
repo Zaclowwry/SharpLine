@@ -398,42 +398,15 @@ const picksData={
   ]
 };
 
-async function handleProCheckout(){
+function handleProCheckout(){
   if(!currentUser){showPage('signup');return;}
-  const btn=document.getElementById('pro-checkout-btn');
-  if(btn){btn.textContent='Loading...';btn.classList.add('loading-btn');}
-  try{
-    await stripe.redirectToCheckout({
-      lineItems:[{price:PRO_PRICE,quantity:1}],
-      mode:'subscription',
-      successUrl:'https://sharplineapp.com?upgraded=true',
-      cancelUrl:'https://sharplineapp.com/pricing',
-      customerEmail:currentUser.email
-    });
-  } catch(e){
-    showToast('Something went wrong. Please try again.');
-    if(btn){btn.textContent='Start Pro — $9.99/mo';btn.classList.remove('loading-btn');}
-  }
+  window.location.href='https://buy.stripe.com/test_aFaaEZfpdbyX0Iv82EdQQ01';
 }
 
-async function handleDailyCheckout(){
+function handleDailyCheckout(){
   if(!currentUser){showPage('signup');return;}
-  const btn=document.getElementById('daily-checkout-btn');
-  if(btn){btn.textContent='Loading...';btn.classList.add('loading-btn');}
-  try{
-    await stripe.redirectToCheckout({
-      lineItems:[{price:DAILY_PRICE,quantity:1}],
-      mode:'payment',
-      successUrl:'https://sharplineapp.com?upgraded=true',
-      cancelUrl:'https://sharplineapp.com/pricing',
-      customerEmail:currentUser.email
-    });
-  } catch(e){
-    showToast('Something went wrong. Please try again.');
-    if(btn){btn.textContent="Buy Today's Pass — $2.99";btn.classList.remove('loading-btn');}
-  }
+  window.location.href='https://buy.stripe.com/test_28E5kF7WL8mL9f1er2dQQ00';
 }
-
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
   if(session){currentUser=session.user;updateNavForUser();}
