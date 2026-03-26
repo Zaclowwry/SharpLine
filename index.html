@@ -14,12 +14,19 @@ nav{background:#000;border-bottom:1px solid #1a1a1a;padding:14px 24px;display:fl
 .nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;}
 .nav-wordmark{font-size:18px;font-weight:700;letter-spacing:1px;color:#fff;}
 .nav-wordmark span{color:#FFD700;}
-.nav-links{display:flex;gap:8px;}
+.nav-links{display:flex;gap:8px;align-items:center;}
 .nav-btn{font-size:11px;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:700;border:none;letter-spacing:1px;}
 .nav-btn-ghost{background:transparent;color:#888;border:1px solid #333;}
 .nav-btn-ghost:hover{color:#fff;border-color:#555;}
 .nav-btn-gold{background:#FFD700;color:#000;}
 .nav-btn-gold:hover{background:#e6c200;}
+@media(max-width:580px){
+  .nav-btn-ghost{display:none;}
+  .nav-wordmark{font-size:15px;}
+  #nav-account-btn{font-size:10px;padding:7px 10px;letter-spacing:0;}
+  #nav-login-btn{font-size:10px;padding:7px 10px;letter-spacing:0;}
+  #nav-signup-btn{font-size:10px;padding:7px 10px;letter-spacing:0;}
+}
 .page{display:none;}.page.active{display:block;}
 .hero{padding:72px 24px 56px;text-align:center;max-width:660px;margin:0 auto;}
 .hero-badge{display:inline-block;font-size:10px;letter-spacing:3px;color:#FFD700;border:1px solid #3a3000;background:#1a1500;padding:6px 18px;border-radius:20px;margin-bottom:24px;}
@@ -163,9 +170,9 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
   <div class="nav-links">
     <button class="nav-btn nav-btn-ghost" onclick="showPage('picks')">Picks</button>
     <button class="nav-btn nav-btn-ghost" onclick="showPage('pricing')">Pricing</button>
-    <button class="nav-btn nav-btn-ghost" id="nav-account-btn" style="display:none;" onclick="showPage('account')">My Account</button>
+    <button class="nav-btn nav-btn-ghost" id="nav-account-btn" style="display:none;" onclick="showPage('account')">Account</button>
     <button class="nav-btn nav-btn-gold" id="nav-login-btn" onclick="showPage('login')">Log In</button>
-    <button class="nav-btn nav-btn-gold" id="nav-signup-btn" onclick="showPage('signup')">Sign Up Free</button>
+    <button class="nav-btn nav-btn-gold" id="nav-signup-btn" onclick="showPage('signup')">Sign Up</button>
   </div>
 </nav>
 
@@ -358,12 +365,7 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
 const SUPABASE_URL='https://elwbxwzequrfucujhgsy.supabase.co';
 const SUPABASE_KEY='sb_publishable_V0kop06cXPYfvOzSdTKjBA_83OVkZM2';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-let currentUser=null;
-let isPro=false;
-let currentSport='nba';
-let expanded=null;
-
+let currentUser=null,isPro=false,currentSport='nba',expanded=null;
 const picksData={
   nba:[
     {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏀 NBA · Charlotte Hornets vs New York Knicks",name:"Over 224.5",odds:"-108",conf:52,free:true,analysis:"Both teams averaging 118+ PPG in last 5 games. Near even matchup that should produce a high scoring shootout tonight."},
@@ -383,10 +385,9 @@ const picksData={
   mlb:[
     {badge:"🥉 VALUE BET",color:"#CD7F32",game:"⚾ MLB · Milwaukee Brewers vs Chicago White Sox",name:"Milwaukee Brewers ML",odds:"-185",conf:68,free:true,analysis:"MIL has won 3 straight and CWS is one of the worst road teams in baseball this season. Brewers at home is a strong value play."},
     {badge:"🥇 BEST BET",color:"#FFD700",game:"⚾ MLB · Los Angeles Dodgers vs Arizona Diamondbacks",name:"Los Angeles Dodgers ML",odds:"-220",conf:74,free:false,analysis:"LAD is the class of the NL at home. Arizona has lost 6 of their last 8 road games and Dodger Stadium is a fortress."},
-    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"⚾ MLB · Philadelphia Phillies vs Texas Rangers",name:"Philadelphia Phillies ML",odds:"-145",conf:61,free:false,analysis:"PHI at home has been dominant and Texas is 4-9 in their last 13 road games. Phillies fans make this park incredibly tough to win in."}
+    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"⚾ MLB · Philadelphia Phillies vs Texas Rangers",name:"Philadelphia Phillies ML",odds:"-145",conf:61,free:false,analysis:"PHI at home has been dominant and Texas is 4-9 in their last 13 road games."}
   ]
 };
-
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
   if(session){currentUser=session.user;updateNavForUser();}
@@ -397,86 +398,66 @@ async function init(){
   });
   renderPicks();
 }
-
 function updateNavForUser(){
-  const loginBtn=document.getElementById('nav-login-btn');
-  const signupBtn=document.getElementById('nav-signup-btn');
-  const accountBtn=document.getElementById('nav-account-btn');
-  if(currentUser){
-    loginBtn.style.display='none';
-    signupBtn.style.display='none';
-    accountBtn.style.display='block';
-    updateAccountPage();
-  } else {
-    loginBtn.style.display='block';
-    signupBtn.style.display='block';
-    accountBtn.style.display='none';
-  }
+  const l=document.getElementById('nav-login-btn');
+  const s=document.getElementById('nav-signup-btn');
+  const a=document.getElementById('nav-account-btn');
+  if(currentUser){l.style.display='none';s.style.display='none';a.style.display='block';updateAccountPage();}
+  else{l.style.display='block';s.style.display='block';a.style.display='none';}
   renderPicks();
 }
-
 function updateAccountPage(){
   if(!currentUser)return;
   const email=currentUser.email||'';
-  const initial=email.charAt(0).toUpperCase();
-  document.getElementById('account-avatar').textContent=initial;
+  document.getElementById('account-avatar').textContent=email.charAt(0).toUpperCase();
   document.getElementById('account-name').textContent=email.split('@')[0];
   document.getElementById('account-email').textContent=email;
   document.getElementById('account-plan-badge').textContent=isPro?'⭐ PRO':'FREE';
   document.getElementById('account-plan-name').textContent=isPro?'SharpLine Pro':'Free';
   document.getElementById('account-picks-access').textContent=isPro?'All 3 daily ✓':'Pick #3 only';
-  const upgradeBtn=document.getElementById('account-upgrade-btn');
-  if(upgradeBtn)upgradeBtn.style.display=isPro?'none':'block';
+  const u=document.getElementById('account-upgrade-btn');
+  if(u)u.style.display=isPro?'none':'block';
 }
-
 async function handleSignup(){
   const email=document.getElementById('signup-email').value.trim();
   const password=document.getElementById('signup-password').value;
-  const errEl=document.getElementById('signup-error');
-  const sucEl=document.getElementById('signup-success');
-  errEl.style.display='none';sucEl.style.display='none';
-  if(!email||!password){errEl.textContent='Please fill in all fields.';errEl.style.display='block';return;}
-  if(password.length<6){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';return;}
+  const err=document.getElementById('signup-error');
+  const suc=document.getElementById('signup-success');
+  err.style.display='none';suc.style.display='none';
+  if(!email||!password){err.textContent='Please fill in all fields.';err.style.display='block';return;}
+  if(password.length<6){err.textContent='Password must be at least 6 characters.';err.style.display='block';return;}
   const{error}=await sb.auth.signUp({email,password});
-  if(error){errEl.textContent=error.message;errEl.style.display='block';}
-  else{sucEl.textContent='Account created! Check your email to confirm, then log in.';sucEl.style.display='block';setTimeout(()=>showPage('login'),3000);}
+  if(error){err.textContent=error.message;err.style.display='block';}
+  else{suc.textContent='Account created! Check your email to confirm, then log in.';suc.style.display='block';setTimeout(()=>showPage('login'),3000);}
 }
-
 async function handleLogin(){
   const email=document.getElementById('login-email').value.trim();
   const password=document.getElementById('login-password').value;
-  const errEl=document.getElementById('login-error');
-  errEl.style.display='none';
-  if(!email||!password){errEl.textContent='Please fill in all fields.';errEl.style.display='block';return;}
+  const err=document.getElementById('login-error');
+  err.style.display='none';
+  if(!email||!password){err.textContent='Please fill in all fields.';err.style.display='block';return;}
   const{error}=await sb.auth.signInWithPassword({email,password});
-  if(error){errEl.textContent=error.message;errEl.style.display='block';}
+  if(error){err.textContent=error.message;err.style.display='block';}
   else{showToast('Welcome back! 🏆');showPage('picks');}
 }
-
 async function handleSignOut(){
-  await sb.auth.signOut();
-  isPro=false;
-  showToast('Signed out successfully');
-  showPage('home');
+  await sb.auth.signOut();isPro=false;
+  showToast('Signed out successfully');showPage('home');
 }
-
 async function handleForgotPassword(){
   const email=document.getElementById('login-email').value.trim();
   if(!email){const e=document.getElementById('login-error');e.textContent='Enter your email above first.';e.style.display='block';return;}
-  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://sharplineapp.com'});
-  if(!error)showToast('Password reset email sent!');
+  await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://sharplineapp.com'});
+  showToast('Password reset email sent!');
 }
-
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.style.display='block';
   setTimeout(()=>t.style.display='none',3000);
 }
-
 function getDateLabel(){
   return new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
 }
-
 function renderPicks(){
   const el=document.getElementById('picks-date-label');
   if(el)el.textContent=getDateLabel();
@@ -491,60 +472,45 @@ function renderPicks(){
     if(upsell)upsell.style.display='block';
     if(freeTag)freeTag.textContent=currentUser?'✓ FREE ACCOUNT — Pick #3 is yours free':'✓ FREE PICK — Sign up to unlock more';
   }
-
   const picks=picksData[currentSport];
   const freePick=picks.find(p=>p.free);
   const lockedPicks=picks.filter(p=>!p.free);
-
   let html='';
-
   if(isPro){
-    const ordered=[picks.find(p=>p.badge.includes('BEST')),picks.find(p=>p.badge.includes('STRONG')),picks.find(p=>p.badge.includes('VALUE'))];
-    ordered.forEach((p,i)=>{
-      html+=buildPickCard(p,i);
-    });
+    [picks.find(p=>p.badge.includes('BEST')),picks.find(p=>p.badge.includes('STRONG')),picks.find(p=>p.badge.includes('VALUE'))].forEach((p,i)=>{html+=buildPickCard(p,i);});
   } else {
     html+=buildPickCard(freePick,0);
-    lockedPicks.forEach((p,i)=>{
+    lockedPicks.forEach(p=>{
       html+=`<div class="locked-card" onclick="showPage('pricing')">
         <div class="locked-left">
           <span class="locked-badge" style="background:${p.color};">${p.badge}</span>
-          <div>
-            <div class="locked-label">Pro Pick — Upgrade to unlock</div>
-            <div class="locked-sub">Available with Daily Pass or Pro</div>
-          </div>
+          <div><div class="locked-label">Pro Pick — Upgrade to unlock</div><div class="locked-sub">Available with Daily Pass or Pro</div></div>
         </div>
         <div class="locked-right">🔒</div>
       </div>`;
     });
   }
-
   list.innerHTML=html;
 }
-
 function buildPickCard(p,i){
   if(!p)return'';
-  const isExpanded=expanded===i;
-  return`<div class="pick-card${isExpanded?' expanded':''}" style="border-left:3px solid ${p.color};" onclick="toggleCard(${i})">
+  const isExp=expanded===i;
+  return`<div class="pick-card${isExp?' expanded':''}" style="border-left:3px solid ${p.color};" onclick="toggleCard(${i})">
     <div class="card-top"><span class="badge" style="background:${p.color};">${p.badge}</span><span class="odds" style="background:${p.color};">${p.odds}</span></div>
     <div class="game">${p.game}</div>
     <div class="pick-name">${p.name}</div>
     <div class="bar-bg"><div class="bar-fill" style="width:${p.conf}%;background:${p.color};"></div></div>
     <div class="conf-row"><span>CONFIDENCE</span><span style="color:${p.color};font-weight:700;">${p.conf}%</span></div>
-    ${isExpanded?`<div class="analysis" style="border-left-color:${p.color};">💡 ${p.analysis}</div>`:''}
-    <div class="tap-hint">${isExpanded?'▲ tap to collapse':'▼ tap for analysis'}</div>
+    ${isExp?`<div class="analysis" style="border-left-color:${p.color};">💡 ${p.analysis}</div>`:''}
+    <div class="tap-hint">${isExp?'▲ tap to collapse':'▼ tap for analysis'}</div>
   </div>`;
 }
-
 function toggleCard(i){expanded=expanded===i?null:i;renderPicks();}
-
 function switchSport(sport,el){
   currentSport=sport;expanded=null;
   document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderPicks();
+  el.classList.add('active');renderPicks();
 }
-
 function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
@@ -552,14 +518,11 @@ function showPage(name){
   if(name==='picks')renderPicks();
   if(name==='account')updateAccountPage();
 }
-
 function toggleFaq(el){
   const a=el.querySelector('.faq-a');
   const t=el.querySelector('.faq-toggle');
-  const open=a.classList.toggle('open');
-  t.textContent=open?'−':'+';
+  t.textContent=a.classList.toggle('open')?'−':'+';
 }
-
 init();
 </script>
 </body>
