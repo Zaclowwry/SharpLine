@@ -6,6 +6,7 @@
 <title>SharpLine — Stay Sharp. Win More.</title>
 <meta name="description" content="SharpLine delivers the top 3 data-driven bets of the day across NBA, NCAAB, NHL and MLB."/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.stripe.com/v3/"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#000;color:#fff;min-height:100vh;}
@@ -136,6 +137,7 @@ nav{background:#000;border-bottom:1px solid #1a1a1a;padding:14px 24px;display:fl
 .account-btn{width:100%;background:transparent;color:#666;font-size:12px;font-weight:700;padding:12px;border-radius:8px;border:1px solid #333;cursor:pointer;letter-spacing:1px;margin-top:8px;}
 .account-btn:hover{border-color:#555;color:#fff;}
 .pro-badge-sm{display:inline-block;font-size:9px;letter-spacing:2px;font-weight:700;color:#000;background:#FFD700;padding:3px 10px;border-radius:20px;}
+.loading-btn{opacity:0.7;cursor:not-allowed;}
 footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
 .footer-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;}
 .footer-links{display:flex;justify-content:center;gap:20px;margin-bottom:14px;}
@@ -229,8 +231,8 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
       <div class="upsell-title">🔒 Unlock Picks 1 &amp; 2</div>
       <div class="upsell-sub">The best picks of the day are waiting — upgrade to Pro or grab a daily pass</div>
       <div class="upsell-btns">
-        <button class="btn-primary" style="font-size:11px;padding:10px 18px;" onclick="showPage('pricing')">Go Pro — $9.99/mo</button>
-        <button class="btn-secondary" style="font-size:11px;padding:10px 18px;" onclick="showPage('pricing')">Daily Pass — $2.99</button>
+        <button class="btn-primary" style="font-size:11px;padding:10px 18px;" onclick="handleProCheckout()">Go Pro — $9.99/mo</button>
+        <button class="btn-secondary" style="font-size:11px;padding:10px 18px;" onclick="handleDailyCheckout()">Daily Pass — $2.99</button>
       </div>
     </div>
   </div>
@@ -261,7 +263,7 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
           <li class="on"><span class="chk">✓</span> All 4 sports</li>
           <li><span class="crs">✗</span> No rollover</li>
         </ul>
-        <button class="plan-btn plan-btn-outline" onclick="showPage('signup')">Buy Today's Pass</button>
+        <button class="plan-btn plan-btn-outline" id="daily-checkout-btn" onclick="handleDailyCheckout()">Buy Today's Pass — $2.99</button>
       </div>
       <div class="plan featured">
         <div class="plan-featured-badge">BEST VALUE</div>
@@ -273,7 +275,7 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
           <li class="on"><span class="chk">✓</span> All 4 sports</li>
           <li class="on"><span class="chk">✓</span> Cancel anytime</li>
         </ul>
-        <button class="plan-btn plan-btn-gold" onclick="showPage('signup')">Start Pro — $9.99/mo</button>
+        <button class="plan-btn plan-btn-gold" id="pro-checkout-btn" onclick="handleProCheckout()">Start Pro — $9.99/mo</button>
       </div>
     </div>
     <div class="disclaimer">⚠ For entertainment purposes only. Must be 21+. Please gamble responsibly.<br/>SharpLine does not accept wagers or guarantee outcomes.</div>
@@ -342,7 +344,7 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
         <div><div class="apl-label">CURRENT PLAN</div><div class="apl-value" id="account-plan-name">Free</div></div>
         <div style="text-align:right;"><div class="apl-label">PICKS ACCESS</div><div class="apl-value" id="account-picks-access">Pick #3 only</div></div>
       </div>
-      <button class="plan-btn plan-btn-gold" style="margin-bottom:12px;" id="account-upgrade-btn" onclick="showPage('pricing')">Upgrade to Pro — $9.99/mo</button>
+      <button class="plan-btn plan-btn-gold" style="margin-bottom:12px;" id="account-upgrade-btn" onclick="handleProCheckout()">Upgrade to Pro — $9.99/mo</button>
       <button class="account-btn" onclick="handleSignOut()">Sign Out</button>
     </div>
   </div>
@@ -364,8 +366,15 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
 <script>
 const SUPABASE_URL='https://elwbxwzequrfucujhgsy.supabase.co';
 const SUPABASE_KEY='sb_publishable_V0kop06cXPYfvOzSdTKjBA_83OVkZM2';
+const STRIPE_KEY='pk_test_51TFHewQdYJQTT8WIrxAauk7HBqIXJCGHbggKi3J47z0XLgTIKWtU1AAYC0odenCuyVb66KmtyNSlqNWdUtGhlSb600asFD1ZFF';
+const PRO_PRICE='price_1TFHntQdYJQTT8WInwHcHxBG';
+const DAILY_PRICE='price_1TFHnIQdYJQTT8WIilxQ7Zma';
+
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const stripe=Stripe(STRIPE_KEY);
+
 let currentUser=null,isPro=false,currentSport='nba',expanded=null;
+
 const picksData={
   nba:[
     {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏀 NBA · Charlotte Hornets vs New York Knicks",name:"Over 224.5",odds:"-108",conf:52,free:true,analysis:"Both teams averaging 118+ PPG in last 5 games. Near even matchup that should produce a high scoring shootout tonight."},
@@ -388,6 +397,43 @@ const picksData={
     {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"⚾ MLB · Philadelphia Phillies vs Texas Rangers",name:"Philadelphia Phillies ML",odds:"-145",conf:61,free:false,analysis:"PHI at home has been dominant and Texas is 4-9 in their last 13 road games."}
   ]
 };
+
+async function handleProCheckout(){
+  if(!currentUser){showPage('signup');return;}
+  const btn=document.getElementById('pro-checkout-btn');
+  if(btn){btn.textContent='Loading...';btn.classList.add('loading-btn');}
+  try{
+    await stripe.redirectToCheckout({
+      lineItems:[{price:PRO_PRICE,quantity:1}],
+      mode:'subscription',
+      successUrl:'https://sharplineapp.com?upgraded=true',
+      cancelUrl:'https://sharplineapp.com/pricing',
+      customerEmail:currentUser.email
+    });
+  } catch(e){
+    showToast('Something went wrong. Please try again.');
+    if(btn){btn.textContent='Start Pro — $9.99/mo';btn.classList.remove('loading-btn');}
+  }
+}
+
+async function handleDailyCheckout(){
+  if(!currentUser){showPage('signup');return;}
+  const btn=document.getElementById('daily-checkout-btn');
+  if(btn){btn.textContent='Loading...';btn.classList.add('loading-btn');}
+  try{
+    await stripe.redirectToCheckout({
+      lineItems:[{price:DAILY_PRICE,quantity:1}],
+      mode:'payment',
+      successUrl:'https://sharplineapp.com?upgraded=true',
+      cancelUrl:'https://sharplineapp.com/pricing',
+      customerEmail:currentUser.email
+    });
+  } catch(e){
+    showToast('Something went wrong. Please try again.');
+    if(btn){btn.textContent="Buy Today's Pass — $2.99";btn.classList.remove('loading-btn');}
+  }
+}
+
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
   if(session){currentUser=session.user;updateNavForUser();}
@@ -396,8 +442,15 @@ async function init(){
     updateNavForUser();
     if(currentUser)updateAccountPage();
   });
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('upgraded')==='true'){
+    isPro=true;
+    showToast('Welcome to SharpLine Pro! 🏆');
+    showPage('picks');
+  }
   renderPicks();
 }
+
 function updateNavForUser(){
   const l=document.getElementById('nav-login-btn');
   const s=document.getElementById('nav-signup-btn');
@@ -406,6 +459,7 @@ function updateNavForUser(){
   else{l.style.display='block';s.style.display='block';a.style.display='none';}
   renderPicks();
 }
+
 function updateAccountPage(){
   if(!currentUser)return;
   const email=currentUser.email||'';
@@ -418,6 +472,7 @@ function updateAccountPage(){
   const u=document.getElementById('account-upgrade-btn');
   if(u)u.style.display=isPro?'none':'block';
 }
+
 async function handleSignup(){
   const email=document.getElementById('signup-email').value.trim();
   const password=document.getElementById('signup-password').value;
@@ -430,6 +485,7 @@ async function handleSignup(){
   if(error){err.textContent=error.message;err.style.display='block';}
   else{suc.textContent='Account created! Check your email to confirm, then log in.';suc.style.display='block';setTimeout(()=>showPage('login'),3000);}
 }
+
 async function handleLogin(){
   const email=document.getElementById('login-email').value.trim();
   const password=document.getElementById('login-password').value;
@@ -440,24 +496,29 @@ async function handleLogin(){
   if(error){err.textContent=error.message;err.style.display='block';}
   else{showToast('Welcome back! 🏆');showPage('picks');}
 }
+
 async function handleSignOut(){
   await sb.auth.signOut();isPro=false;
   showToast('Signed out successfully');showPage('home');
 }
+
 async function handleForgotPassword(){
   const email=document.getElementById('login-email').value.trim();
   if(!email){const e=document.getElementById('login-error');e.textContent='Enter your email above first.';e.style.display='block';return;}
   await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://sharplineapp.com'});
   showToast('Password reset email sent!');
 }
+
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.style.display='block';
   setTimeout(()=>t.style.display='none',3000);
 }
+
 function getDateLabel(){
   return new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
 }
+
 function renderPicks(){
   const el=document.getElementById('picks-date-label');
   if(el)el.textContent=getDateLabel();
@@ -492,6 +553,7 @@ function renderPicks(){
   }
   list.innerHTML=html;
 }
+
 function buildPickCard(p,i){
   if(!p)return'';
   const isExp=expanded===i;
@@ -505,6 +567,7 @@ function buildPickCard(p,i){
     <div class="tap-hint">${isExp?'▲ tap to collapse':'▼ tap for analysis'}</div>
   </div>`;
 }
+
 function toggleCard(i){expanded=expanded===i?null:i;renderPicks();}
 function switchSport(sport,el){
   currentSport=sport;expanded=null;
