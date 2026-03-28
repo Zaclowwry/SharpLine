@@ -6,7 +6,6 @@
 <title>SharpLine — Stay Sharp. Win More.</title>
 <meta name="description" content="SharpLine delivers the top 3 data-driven bets of the day across NBA, NCAAB, NHL and MLB."/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://js.stripe.com/v3/"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#000;color:#fff;min-height:100vh;}
@@ -137,13 +136,13 @@ nav{background:#000;border-bottom:1px solid #1a1a1a;padding:14px 24px;display:fl
 .account-btn{width:100%;background:transparent;color:#666;font-size:12px;font-weight:700;padding:12px;border-radius:8px;border:1px solid #333;cursor:pointer;letter-spacing:1px;margin-top:8px;}
 .account-btn:hover{border-color:#555;color:#fff;}
 .pro-badge-sm{display:inline-block;font-size:9px;letter-spacing:2px;font-weight:700;color:#000;background:#FFD700;padding:3px 10px;border-radius:20px;}
-.loading-btn{opacity:0.7;cursor:not-allowed;}
 footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
 .footer-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;}
 .footer-links{display:flex;justify-content:center;gap:20px;margin-bottom:14px;}
 .footer-links a{font-size:11px;color:#555;cursor:pointer;}.footer-links a:hover{color:#888;}
 .footer-copy{font-size:10px;color:#333;line-height:1.7;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#FFD700;color:#000;font-size:12px;font-weight:700;padding:12px 24px;border-radius:8px;letter-spacing:1px;display:none;z-index:999;}
+.loading-picks{text-align:center;padding:40px 20px;color:#555;font-size:13px;}
 </style>
 </head>
 <body>
@@ -283,7 +282,7 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
   <div class="faq-wrap">
     <div class="faq-header"><h2>Frequently Asked Questions</h2></div>
     <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">How are the picks generated?<span class="faq-toggle">+</span></div><div class="faq-a">SharpLine uses real-time game data, live win probabilities, and odds analysis to rank the top 3 bets of the day by confidence score across NBA, NCAAB, NHL and MLB.</div></div>
-    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">When are picks posted each day?<span class="faq-toggle">+</span></div><div class="faq-a">Picks are updated every morning and refreshed throughout the day as new data and line movements come in.</div></div>
+    <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">When are picks posted each day?<span class="faq-toggle">+</span></div><div class="faq-a">Picks are updated at 8AM, 12PM, and 4PM every day automatically.</div></div>
     <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Can I cancel my Pro subscription?<span class="faq-toggle">+</span></div><div class="faq-a">Yes — cancel anytime with one click. No questions asked, no hidden fees, no hassle.</div></div>
     <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">What sports do you cover?<span class="faq-toggle">+</span></div><div class="faq-a">NBA, NCAA Men's Basketball, NHL and MLB. More sports coming soon.</div></div>
     <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Why is the free pick #3 and not #1?<span class="faq-toggle">+</span></div><div class="faq-a">Pick #3 is our Value Bet — a solid pick with real upside. Picks #1 and #2 are our strongest plays of the day and exclusive to Pro members.</div></div>
@@ -349,37 +348,34 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
     </div>
   </div>
 </div>
+
 <!-- REFUND POLICY -->
 <div class="page" id="page-refunds">
   <div style="max-width:600px;margin:0 auto;padding:56px 24px;">
     <h1 style="font-size:28px;font-weight:900;margin-bottom:8px;">Refund Policy</h1>
     <p style="font-size:12px;color:#555;margin-bottom:32px;">Last updated: March 26, 2026</p>
-
     <div style="background:#111;border:1px solid #222;border-radius:14px;padding:28px;margin-bottom:16px;">
       <h2 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#FFD700;">SharpLine Pro — Monthly Subscription</h2>
       <p style="font-size:13px;color:#888;line-height:1.7;">You may cancel your SharpLine Pro subscription at any time. Cancellations take effect at the end of the current billing period. We do not offer refunds for partial months. Once cancelled, you will retain Pro access until the end of the period you have already paid for.</p>
     </div>
-
     <div style="background:#111;border:1px solid #222;border-radius:14px;padding:28px;margin-bottom:16px;">
       <h2 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#FFD700;">Daily Pass — One Time Payment</h2>
       <p style="font-size:13px;color:#888;line-height:1.7;">Daily Pass purchases are non-refundable. Access expires at midnight on the day of purchase. By purchasing a Daily Pass you acknowledge that the service is for entertainment purposes only and results are not guaranteed.</p>
     </div>
-
     <div style="background:#111;border:1px solid #222;border-radius:14px;padding:28px;margin-bottom:16px;">
       <h2 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#FFD700;">How to Cancel</h2>
-      <p style="font-size:13px;color:#888;line-height:1.7;">To cancel your Pro subscription, log into your account and click "Cancel Subscription" or contact us directly at <a href="mailto:sharplineapp1@gmail.com" style="color:#FFD700;">sharplineapp1@gmail.com</a> and we will process your cancellation within 24 hours.</p>
+      <p style="font-size:13px;color:#888;line-height:1.7;">To cancel your Pro subscription, log into your account and click "Cancel Subscription" or contact us at <a href="mailto:sharplineapp1@gmail.com" style="color:#FFD700;">sharplineapp1@gmail.com</a> and we will process your cancellation within 24 hours.</p>
     </div>
-
     <div style="background:#111;border:1px solid #222;border-radius:14px;padding:28px;margin-bottom:16px;">
       <h2 style="font-size:16px;font-weight:700;margin-bottom:12px;color:#FFD700;">Contact Us</h2>
-      <p style="font-size:13px;color:#888;line-height:1.7;">For any billing questions or concerns please reach out to us at:<br/><a href="mailto:sharplineapp1@gmail.com" style="color:#FFD700;">sharplineapp1@gmail.com</a><br/><br/>We respond to all emails within 24 hours.</p>
+      <p style="font-size:13px;color:#888;line-height:1.7;">For any billing questions please reach out to:<br/><a href="mailto:sharplineapp1@gmail.com" style="color:#FFD700;">sharplineapp1@gmail.com</a><br/><br/>We respond to all emails within 24 hours.</p>
     </div>
-
     <div style="text-align:center;margin-top:32px;">
-      <p style="font-size:11px;color:#444;line-height:1.6;">⚠ SharpLine is for entertainment purposes only. Must be 21+.<br/>SharpLine does not accept wagers or guarantee outcomes. Please gamble responsibly.</p>
+      <p style="font-size:11px;color:#444;line-height:1.6;">⚠ SharpLine is for entertainment purposes only. Must be 21+.<br/>SharpLine does not accept wagers or guarantee outcomes.</p>
     </div>
   </div>
 </div>
+
 <!-- CONTACT -->
 <div class="page" id="page-contact">
   <div style="max-width:480px;margin:0 auto;padding:56px 24px;text-align:center;">
@@ -396,7 +392,6 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
 </div>
 
 <footer>
-  <footer>
   <div class="footer-logo">
     <svg width="22" height="22" viewBox="0 0 72 72" fill="none"><rect width="72" height="72" rx="16" fill="#FFD700"/><path d="M29 8 L43 8 L41 22 Q40 28 36 30 Q32 28 31 22 Z" fill="#000"/><rect x="7" y="46" width="15" height="18" rx="2" fill="#000"/><rect x="28" y="38" width="16" height="26" rx="2" fill="#000"/><rect x="50" y="42" width="15" height="22" rx="2" fill="#000"/></svg>
     <span style="font-size:14px;font-weight:700;color:#fff;">Sharp<span style="color:#FFD700;">Line</span></span>
@@ -410,50 +405,51 @@ footer{border-top:1px solid #1a1a1a;padding:28px 24px;text-align:center;}
   </div>
   <div class="footer-copy">© 2026 SharpLine · SharpLineApp.com<br/>For entertainment purposes only. Must be 21+. Please gamble responsibly.<br/>Questions? <a href="mailto:sharplineapp1@gmail.com" style="color:#FFD700;">sharplineapp1@gmail.com</a></div>
 </footer>
+
 <script>
 const SUPABASE_URL='https://elwbxwzequrfucujhgsy.supabase.co';
 const SUPABASE_KEY='sb_publishable_V0kop06cXPYfvOzSdTKjBA_83OVkZM2';
-const STRIPE_KEY='pk_test_51TFHewQdYJQTT8WIrxAauk7HBqIXJCGHbggKi3J47z0XLgTIKWtU1AAYC0odenCuyVb66KmtyNSlqNWdUtGhlSb600asFD1ZFF';
-const PRO_PRICE='price_1TFHntQdYJQTT8WInwHcHxBG';
-const DAILY_PRICE='price_1TFHnIQdYJQTT8WIilxQ7Zma';
-
+const BACKEND_URL='https://sharpline-backend.onrender.com';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const stripe=Stripe(STRIPE_KEY);
 
 let currentUser=null,isPro=false,currentSport='nba',expanded=null;
 
-const picksData={
+let picksData={
   nba:[
-    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏀 NBA · Charlotte Hornets vs New York Knicks",name:"Over 224.5",odds:"-108",conf:52,free:true,analysis:"Both teams averaging 118+ PPG in last 5 games. Near even matchup that should produce a high scoring shootout tonight."},
-    {badge:"🥇 BEST BET",color:"#FFD700",game:"🏀 NBA · Orlando Magic vs Sacramento Kings",name:"Orlando Magic ML",odds:"-800",conf:91,free:false,analysis:"ORL is 91% favored at home vs a Sacramento team that just got blown out. Magic are 14-3 at home this stretch."},
-    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🏀 NBA · Detroit Pistons vs New Orleans Pelicans",name:"Detroit Pistons -5.5",odds:"-115",conf:63,free:false,analysis:"DET is 63% favored at home. Pistons have won 4 straight and NOP is 2-11 in their last 13 road games."}
+    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏀 NBA · Loading today's picks...",name:"Check back shortly",odds:"-110",conf:55,free:true,analysis:"Our picks engine is fetching the latest data."},
+    {badge:"🥇 BEST BET",color:"#FFD700",game:"🏀 NBA · Loading...",name:"Pro Pick",odds:"-150",conf:70,free:false,analysis:""},
+    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🏀 NBA · Loading...",name:"Pro Pick",odds:"+110",conf:60,free:false,analysis:""}
   ],
   ncaamb:[
-    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🎓 NCAAB · Auburn vs Nevada",name:"Over 151.5",odds:"-105",conf:64,free:true,analysis:"Both teams pace in the top 20 nationally. Expect a high scoring affair in this SEC vs Mountain West matchup."},
-    {badge:"🥇 BEST BET",color:"#FFD700",game:"🎓 NCAAB · Auburn Tigers vs Nevada Wolf Pack",name:"Auburn Tigers -14.5",odds:"-112",conf:91,free:false,analysis:"Auburn is a powerhouse matchup vs a mid-major Nevada squad. Tigers have covered 8 of last 10 home games."},
-    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🎓 NCAAB · Dayton vs Illinois State",name:"Dayton -8",odds:"-110",conf:74,free:false,analysis:"Dayton is rolling at home and Illinois State is 1-8 ATS on the road this season."}
+    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🎓 NCAAB · Loading today's picks...",name:"Check back shortly",odds:"-110",conf:55,free:true,analysis:"Our picks engine is fetching the latest data."},
+    {badge:"🥇 BEST BET",color:"#FFD700",game:"🎓 NCAAB · Loading...",name:"Pro Pick",odds:"-150",conf:70,free:false,analysis:""},
+    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🎓 NCAAB · Loading...",name:"Pro Pick",odds:"+110",conf:60,free:false,analysis:""}
   ],
   nhl:[
-    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏒 NHL · Colorado Avalanche @ Pittsburgh",name:"Colorado Avalanche ML",odds:"+115",conf:61,free:true,analysis:"COL 61% favored even on the road. Avalanche have elite road record and Makar is a game changer on any blue line."},
-    {badge:"🥇 BEST BET",color:"#FFD700",game:"🏒 NHL · Boston Bruins vs Toronto Maple Leafs",name:"Boston Bruins ML",odds:"-165",conf:63,free:false,analysis:"BOS 63% favored at home. Bruins have won 5 of last 7 vs TOR in this classic Atlantic Division rivalry."},
-    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🏒 NHL · Florida Panthers vs Seattle Kraken",name:"Florida Panthers ML",odds:"-195",conf:55,free:false,analysis:"FLA 55% favored at home. Panthers are elite at home and Seattle is struggling badly on the road right now."}
+    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"🏒 NHL · Loading today's picks...",name:"Check back shortly",odds:"-110",conf:55,free:true,analysis:"Our picks engine is fetching the latest data."},
+    {badge:"🥇 BEST BET",color:"#FFD700",game:"🏒 NHL · Loading...",name:"Pro Pick",odds:"-150",conf:70,free:false,analysis:""},
+    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"🏒 NHL · Loading...",name:"Pro Pick",odds:"+110",conf:60,free:false,analysis:""}
   ],
   mlb:[
-    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"⚾ MLB · Milwaukee Brewers vs Chicago White Sox",name:"Milwaukee Brewers ML",odds:"-185",conf:68,free:true,analysis:"MIL has won 3 straight and CWS is one of the worst road teams in baseball this season. Brewers at home is a strong value play."},
-    {badge:"🥇 BEST BET",color:"#FFD700",game:"⚾ MLB · Los Angeles Dodgers vs Arizona Diamondbacks",name:"Los Angeles Dodgers ML",odds:"-220",conf:74,free:false,analysis:"LAD is the class of the NL at home. Arizona has lost 6 of their last 8 road games and Dodger Stadium is a fortress."},
-    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"⚾ MLB · Philadelphia Phillies vs Texas Rangers",name:"Philadelphia Phillies ML",odds:"-145",conf:61,free:false,analysis:"PHI at home has been dominant and Texas is 4-9 in their last 13 road games."}
+    {badge:"🥉 VALUE BET",color:"#CD7F32",game:"⚾ MLB · Loading today's picks...",name:"Check back shortly",odds:"-110",conf:55,free:true,analysis:"Our picks engine is fetching the latest data."},
+    {badge:"🥇 BEST BET",color:"#FFD700",game:"⚾ MLB · Loading...",name:"Pro Pick",odds:"-150",conf:70,free:false,analysis:""},
+    {badge:"🥈 STRONG PLAY",color:"#C0C0C0",game:"⚾ MLB · Loading...",name:"Pro Pick",odds:"+110",conf:60,free:false,analysis:""}
   ]
 };
 
-function handleProCheckout(){
-  if(!currentUser){showPage('signup');return;}
-  window.location.href='https://buy.stripe.com/bJe4gz0RG1iVdFA9cjgQE02';
+async function fetchLivePicks(){
+  try{
+    const res=await fetch(BACKEND_URL+'/picks');
+    const data=await res.json();
+    if(data.picks){
+      picksData=data.picks;
+      console.log('Live picks loaded from backend');
+    }
+  } catch(e){
+    console.log('Using cached picks:', e.message);
+  }
 }
 
-function handleDailyCheckout(){
-  if(!currentUser){showPage('signup');return;}
-  window.location.href='https://buy.stripe.com/5kQcN5gQEe5H594agngQE03';
-}
 async function init(){
   const{data:{session}}=await sb.auth.getSession();
   if(session){currentUser=session.user;updateNavForUser();}
@@ -468,6 +464,7 @@ async function init(){
     showToast('Welcome to SharpLine Pro! 🏆');
     showPage('picks');
   }
+  await fetchLivePicks();
   renderPicks();
 }
 
@@ -529,6 +526,16 @@ async function handleForgotPassword(){
   showToast('Password reset email sent!');
 }
 
+function handleProCheckout(){
+  if(!currentUser){showPage('signup');return;}
+  window.location.href='https://buy.stripe.com/bJe4gz0RG1iVdFA9cjgQE02';
+}
+
+function handleDailyCheckout(){
+  if(!currentUser){showPage('signup');return;}
+  window.location.href='https://buy.stripe.com/5kQcN5gQEe5H594agngQE03';
+}
+
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.style.display='block';
@@ -554,13 +561,14 @@ function renderPicks(){
     if(freeTag)freeTag.textContent=currentUser?'✓ FREE ACCOUNT — Pick #3 is yours free':'✓ FREE PICK — Sign up to unlock more';
   }
   const picks=picksData[currentSport];
+  if(!picks){list.innerHTML='<div class="loading-picks">Loading picks...</div>';return;}
   const freePick=picks.find(p=>p.free);
   const lockedPicks=picks.filter(p=>!p.free);
   let html='';
   if(isPro){
-    [picks.find(p=>p.badge.includes('BEST')),picks.find(p=>p.badge.includes('STRONG')),picks.find(p=>p.badge.includes('VALUE'))].forEach((p,i)=>{html+=buildPickCard(p,i);});
+    [picks.find(p=>p.badge.includes('BEST')),picks.find(p=>p.badge.includes('STRONG')),picks.find(p=>p.badge.includes('VALUE'))].forEach((p,i)=>{if(p)html+=buildPickCard(p,i);});
   } else {
-    html+=buildPickCard(freePick,0);
+    if(freePick)html+=buildPickCard(freePick,0);
     lockedPicks.forEach(p=>{
       html+=`<div class="locked-card" onclick="showPage('pricing')">
         <div class="locked-left">
